@@ -1,0 +1,6 @@
+to-test@kruskal.net: test@kruskal.net
+to-test2@kruskal.net: test2@kruskal.net
+test.com@kruskal.net: test@kruskal.net
+test2.com@kruskal.net: test2@kruskal.net
+multiple@kruskal.net: test@kruskal.net, test2@kruskal.net
+*: :fail: No Such User Here

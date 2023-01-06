@@ -1,0 +1,8 @@
+^.*\.(com|edu|gov|info|net|org|us)@kruskal\.net: vincent@kruskal.net
+^michael-.*@kruskal\.net: michael@kruskal.net
+abcdef@kruskal.net: spam@kruskal.net
+
+# Example of a much more powerful regex-based rule that works.
+# This will forward to-*@kruskal.net to *@kruskal.net
+# TODO: find a more elegant way to specify this?
+#^to-.*?@kruskal\.net: ${sg{$local_part@$domain_data}{^to-(.*)\$}{\$1}}

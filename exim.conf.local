@@ -1,0 +1,220 @@
+@AUTH@
+
+@BEGINACL@
+
+@CONFIG@
+chunking_advertise_hosts=""
+deliver_queue_load_max = 1
+ignore_bounce_errors_after = 12h
+smtp_accept_max = 50
+tls_require_ciphers = ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM:!SSLv2
+log_selector = +all
+
+
+@DIRECTOREND@
+
+@DIRECTORMIDDLE@
+
+@DIRECTORSTART@
+
+@ENDACL@
+
+@POSTMAILCOUNT@
+
+@PREDOTFORWARD@
+
+@PREFILTER@
+
+@PRELOCALUSER@
+
+@PRENOALIASDISCARD@
+
+@PREROUTERS@
+
+@PREVALIASNOSTAR@
+# Same as virtual_aliases_nostar, but without "unseen".  This prevents mailboxes from intercepting
+# emails sent to forwarders.
+virtual_aliases_nostar_intercept:
+    driver = redirect
+    allow_defer
+    allow_fail
+    domains = !$primary_hostname : dsearch;/etc/valiases
+    user = "${lookup \
+        {$domain_data} \
+        lsearch{/etc/userdomains} \
+        {$value} \
+    }"
+    address_data = \
+        "router=$router_name \
+        redirect=${quote:${lookup \
+            {$local_part@$domain_data} \
+            lsearch{/etc/valiases/$domain_data} \
+    }}"
+    data = ${extract{redirect}{$address_data}}
+    file_transport = address_file
+    pipe_transport = ${if forall \
+        {/bin/cagefs_enter:/usr/sbin/cagefsctl} \
+        {exists{$item}} \
+        {cagefs_virtual_address_pipe} \
+        {${if forany \
+            {${extract \
+                {6} \
+                {:} \
+                {${lookup passwd \
+                    {${lookup \
+                        {$domain_data} \
+                        lsearch{/etc/userdomains} \
+                    }} \
+                }} \
+            }:$r_suspended_shell} \
+            {match{$item}{\N(jail|no)shell\N}} \
+            {jailed_virtual_address_pipe} \
+            {virtual_address_pipe} \
+        }} \
+    }
+    router_home_directory = ${extract \
+        {5} \
+        {::} \
+        {${lookup passwd \      
+            {${lookup \         
+                {$domain_data} \
+                lsearch{/etc/userdomains} \
+                {$value} \
+            }} \
+            {$value} \
+        }} \
+    }
+    local_part_suffix = +*
+    local_part_suffix_optional
+    retry_use_local_part
+
+expiring_aliases:
+    driver = redirect
+    allow_defer
+    allow_fail
+    domains = !$primary_hostname : dsearch;/etc/ealiases
+    user = "${lookup \
+        {$domain_data} \
+        lsearch{/etc/userdomains} \
+        {$value} \
+    }"
+    address_data = \
+        "router=$router_name \
+        redirect=${quote:${run{/etc/check_expired ${lookup \
+            {$local_part@$domain_data} \
+            lsearch{/etc/ealiases/$domain_data} \
+        }} \
+    }}"
+    data = ${extract{redirect}{$address_data}}
+    file_transport = address_file
+    pipe_transport = ${if forall \
+        {/bin/cagefs_enter:/usr/sbin/cagefsctl} \
+        {exists{$item}} \
+        {cagefs_virtual_address_pipe} \
+        {${if forany \
+            {${extract \
+                {6} \
+                {:} \
+                {${lookup passwd \
+                    {${lookup \
+                        {$domain_data} \
+                        lsearch{/etc/userdomains} \
+                    }} \
+                }} \
+            }:$r_suspended_shell} \
+            {match{$item}{\N(jail|no)shell\N}} \
+            {jailed_virtual_address_pipe} \
+            {virtual_address_pipe} \
+        }} \    
+    }           
+    router_home_directory = ${extract \
+        {5} \
+        {::} \
+        {${lookup passwd \
+            {${lookup \
+                {$domain_data} \
+                lsearch{/etc/userdomains} \
+                {$value} \
+            }} \
+            {$value} \
+        }} \
+    }
+    local_part_suffix = +*
+    local_part_suffix_optional
+    retry_use_local_part
+
+regex_aliases:
+    driver = redirect
+    allow_defer
+    allow_fail
+    domains = !$primary_hostname : dsearch;/etc/raliases
+    user = "${lookup \
+        {$domain_data} \
+        lsearch{/etc/userdomains} \
+        {$value} \
+    }"
+    address_data = \
+        "router=$router_name \
+        redirect=${quote:${expand:${lookup \
+            {$local_part@$domain_data} \
+            nwildlsearch{/etc/raliases/$domain_data}{$value} \
+    }}}"
+    data = ${extract{redirect}{$address_data}}
+    file_transport = address_file
+    pipe_transport = ${if forall \
+        {/bin/cagefs_enter:/usr/sbin/cagefsctl} \
+        {exists{$item}} \
+        {cagefs_virtual_address_pipe} \
+        {${if forany \
+            {${extract \
+                {6} \
+                {:} \
+                {${lookup passwd \
+                    {${lookup \
+                        {$domain_data} \
+                        lsearch{/etc/userdomains} \
+                    }} \
+                }} \
+            }:$r_suspended_shell} \
+            {match{$item}{\N(jail|no)shell\N}} \
+            {jailed_virtual_address_pipe} \
+            {virtual_address_pipe} \
+        }} \    
+    }           
+    router_home_directory = ${extract \
+        {5} \
+        {::} \
+        {${lookup passwd \
+            {${lookup \
+                {$domain_data} \
+                lsearch{/etc/userdomains} \
+                {$value} \
+            }} \
+            {$value} \
+        }} \
+    }
+    local_part_suffix = +*
+    local_part_suffix_optional
+    retry_use_local_part
+@PREVALIASSTAR@
+
+@PREVIRTUALUSER@
+
+@RETRYEND@
+
+@RETRYSTART@
+
+@REWRITE@
+
+@ROUTEREND@
+
+@ROUTERMIDDLE@
+
+@ROUTERSTART@
+
+@TRANSPORTEND@
+
+@TRANSPORTMIDDLE@
+
+@TRANSPORTSTART@
+

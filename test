@@ -1,0 +1,25 @@
+#!/bin/bash
+
+TEST_DIR="$(pwd)/mock"
+LOCAL_DIR="$(pwd)"
+
+/usr/local/cpanel/scripts/eximconfgen --local \
+  --local=exim.conf.local \
+  --localopts=exim.conf.localopts \
+  | sed "s:/etc/raliases:$LOCAL_DIR/raliases:g" \
+  | sed "s:/etc/ealiases:$LOCAL_DIR/ealiases:g" \
+  | sed "s:/etc/check_expired:$LOCAL_DIR/check_expired:g" \
+  > /etc/exim.conf.test
+# TODO: handle valiases here too?  syncing with cPanel is difficult
+#| sed "s:/etc/valiases:$LOCAL_DIR/valiases:g" \
+
+# TODO: figure out how to mock virtual users as well?  Until then just keep
+# a test and test2 email account.
+# | sed "s:/mail/\$domain_data:../..$TEST_DIR/mail/\$domain_data:g" \
+cat /etc/exim.conf.test \
+  | sed "s:/etc/valiases:$TEST_DIR/valiases:g" \
+  | sed "s:$LOCAL_DIR/raliases:$TEST_DIR/raliases:g" \
+  | sed "s:$LOCAL_DIR/ealiases:$TEST_DIR/ealiases:g" \
+  > /etc/exim.conf.mock
+
+python3 -m pytest test_files -v

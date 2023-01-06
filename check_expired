@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Custom script to check if an email address has expired. The expected input
+# data is provided by Exim from /etc/ealiases
+
+if [[ "$#" -lt 2 ]]; then
+ exit 0;
+fi
+
+if [[ "$2" =~ "N/A" ]]; then
+  echo "$1"
+elif [[ "$2" -ge $(date +%s) ]]; then
+  echo "$1"
+else
+  echo ":fail: Temporary email address has expired."
+fi

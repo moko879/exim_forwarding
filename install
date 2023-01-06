@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -eux
+
+mkdir -p /etc/raliases
+mkdir -p /etc/ealiases
+
+if ( ./test ); then
+echo "Copying local config files..."
+cp --backup exim.conf.local /etc/exim.conf.local
+cp --backup exim.conf.localopts /etc/exim.conf.localopt
+cp --backup raliases/* /etc/raliases/
+cp --backup ealiases/* /etc/ealiases/
+cp --backup check_expired /etc/check_expired
+
+echo "Building exim config..."
+/scripts/buildeximconf
+
+# TODO: Run some tests over production post-install too!
+
+echo "Restarting exim server..."
+/usr/local/cpanel/scripts/restartsrv_exim
+
+else
+echo "Tests failed, fix before installing changes!"
+fi

@@ -1,0 +1,11 @@
+live@kruskal.net: test@kruskal.net 9672894800 
+live.com@kruskal.net: test2@kruskal.net 9672894800 
+eternal.com@kruskal.net: test2@kruskal.net N/A 
+eternal@kruskal.net: test@kruskal.net N/A 
+expired@kruskal.net: test@kruskal.net 1670389200 
+expired.com@kruskal.net: test2@kruskal.net 1670389200 
+# Virtual aliases should take precedent and this will be ignored
+to-test@kruskal.net: invalid@kruskal.net 1670389200
+# Test multiple forwarder handling
+multiple-live@kruskal.net: test@kruskal.net,test2@kruskal.net 9672894800
+multiple-expired@kruskal.net: test@kruskal.net,test2@kruskal.net 1670389200
