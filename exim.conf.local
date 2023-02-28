@@ -100,11 +100,9 @@ expiring_aliases:
     }"
     address_data = \
         "router=$router_name \
-        redirect=${quote:${run{/etc/check_expired ${lookup \
-            {$local_part@$domain_data} \
-            lsearch{/etc/ealiases/$domain_data} \
-        }} \
-    }}"
+        redirect=${quote:${run{ \
+          /etc/check_expired \"$local_part@$domain_data\" /etc/ealiases/$domain_data \
+        }}}"
     data = ${extract{redirect}{$address_data}}
     file_transport = address_file
     pipe_transport = ${if forall \
