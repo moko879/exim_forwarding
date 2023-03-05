@@ -10,7 +10,8 @@ echo "Copying local config files..."
 cp --backup exim.conf.local /etc/exim.conf.local
 cp --backup exim.conf.localopts /etc/exim.conf.localopt
 cp --backup raliases/* /etc/raliases/
-cp --backup ealiases/* /etc/ealiases/
+# These are dynamically modified via forwarders_ui, and should *not* be overwritten
+#cp --backup ealiases/* /etc/ealiases/
 cp --backup check_expired /etc/check_expired
 
 echo "Building exim config..."
