@@ -13,6 +13,7 @@ import exim
     ("Eternal ealias", ["eternal@kruskal.net"], {"test@kruskal.net"}),
     ("Eternal ealias ralias override", ["eternal.com@kruskal.net"], {"test2@kruskal.net"}),
     ("Multiple not expired ealias", ["multiple-live@kruskal.net"], {"test@kruskal.net", "test2@kruskal.net"}),
+    ("Case-sensitive ealias", ["CaseSensitive@kruskal.net"], {"test@kruskal.net"}),
 ])
 def test_delivered(name, received, expected, parse_matcher):
   assert exim.get_addresses(received, conf_suffix="mock") == parse_matcher(

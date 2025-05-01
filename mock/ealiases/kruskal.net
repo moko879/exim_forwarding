@@ -9,3 +9,5 @@ to-test@kruskal.net: invalid@kruskal.net 1670389200
 # Test multiple forwarder handling
 multiple-live@kruskal.net: test@kruskal.net,test2@kruskal.net 9672894800
 multiple-expired@kruskal.net: test@kruskal.net,test2@kruskal.net 1670389200
+# Test case sensitive aliases
+CaseSensitive@kruskal.net: test@kruskal.net N/A

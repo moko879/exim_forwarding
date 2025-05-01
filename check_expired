@@ -10,7 +10,7 @@ fi
 EMAIL=$1
 EALIASES=$2
 
-MATCH=$(cat "$EALIASES" | grep "^$EMAIL:" | head -1)
+MATCH=$(cat "$EALIASES" | grep -i "^$EMAIL:" | head -1)
 IFS=' ' read -r -a SPLIT <<< "$MATCH"
 if [[ "${#SPLIT[@]}" -ne 3 ]]; then
   exit 0;
